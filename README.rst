@@ -3,7 +3,10 @@ Mikla
 =====
 
 A command line tool to edit text files encrypted with GnuPG whilst preventing the plaintext from
-being written to the hard drive.
+being written to the hard drive. This is achieved using the POSIX shared memory API. If you have no
+available memory, Mikla will not work.
+
+Currently, only works in **Python 3.5**.
 
 Installation
 ------------
