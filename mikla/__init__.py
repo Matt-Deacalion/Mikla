@@ -27,7 +27,7 @@ class Mikla:
         """
         Call to run Mikla.
         """
-        password = self.get_password()
+        password = getpass.getpass()
         plaintext = self.decrypt(password)
 
         if self.launch_editor(plaintext):
@@ -160,18 +160,6 @@ class Mikla:
         Returns `True` if GnuPG is installed, `False` if not.
         """
         return bool(shutil.which(gpg_executable))
-
-    def get_password(self):
-        """
-        Prompts user for a password, returns password string.
-        """
-        while True:
-            password = getpass.getpass('Enter password: ')
-
-            if password == getpass.getpass('Verify password: '):
-                return password
-
-            print("Passwords don't match.")
 
     def get_available_file_path(self, directory):
         """
