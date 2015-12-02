@@ -27,6 +27,8 @@ class Mikla:
         """
         Call to run Mikla.
         """
+        self.system_checks()
+
         password = getpass.getpass()
         plaintext = self.decrypt(password)
 
@@ -110,26 +112,6 @@ class Mikla:
         if tmpfs is None:
             tmpfs = self.tmpfs
 
-        # do all of the checking manually,
-        # so we don't pointlessly run GnuPG
-        if not self.gpg_exists():
-            raise FileNotFoundError('GnuPG not installed')
-
-        if not os.access(encrypted, os.F_OK):
-            raise FileNotFoundError(
-                'File not found: {}'.format(encrypted),
-            )
-
-        if not os.access(encrypted, os.R_OK):
-            raise FileNotFoundError(
-                'File not readable: {}'.format(encrypted),
-            )
-
-        if not os.access(tmpfs, os.W_OK):
-            raise FileNotFoundError(
-                'tmpfs directory not writable: {}'.format(tmpfs),
-            )
-
         plain = self.get_available_file_path(tmpfs)
 
         completed_process = subprocess.run(
@@ -170,3 +152,32 @@ class Mikla:
 
             if not filepath.exists():
                 return str(filepath)
+
+    def system_checks(self, encrypted=None, tmpfs=None):
+        """
+        Perform system checks. Instead of catching exceptions this is
+        done manually so we don't pointlessly run GnuPG.
+        """
+        if encrypted is None:
+            encrypted = self.encrypted
+
+        if tmpfs is None:
+            tmpfs = self.tmpfs
+
+        if not self.gpg_exists():
+            raise FileNotFoundError('GnuPG not installed')
+
+        if not os.access(encrypted, os.F_OK):
+            raise FileNotFoundError(
+                'File not found: {}'.format(encrypted),
+            )
+
+        if not os.access(encrypted, os.R_OK):
+            raise FileNotFoundError(
+                'File not readable: {}'.format(encrypted),
+            )
+
+        if not os.access(tmpfs, os.W_OK):
+            raise FileNotFoundError(
+                'tmpfs directory not writable: {}'.format(tmpfs),
+            )
