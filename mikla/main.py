@@ -10,13 +10,20 @@ Options:
   -e, --editor=<editor>       specify the editor to use [default: $EDITOR].
   -t, --tmpfs=<path>          the path to a temporary file system [default: /dev/shm].
 """
+import sys
+
 from docopt import docopt
 
 from mikla import Mikla, __version__
 
 
 def main():
-    Mikla(**docopt(__doc__, version=__version__))
+    try:
+        mikla = Mikla(**docopt(__doc__, version=__version__))
+        mikla.decrypt(mikla.get_password())
+    except (FileNotFoundError, RuntimeError) as error:
+        print(error, file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
