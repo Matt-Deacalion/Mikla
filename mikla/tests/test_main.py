@@ -61,3 +61,17 @@ class MiklaTest(unittest.TestCase):
         )
 
         taken_file.unlink()
+
+    def test_gpg_exists(self):
+        """
+        Does the `gpg_exists` method return `True` if an executable
+        exists?
+        """
+        self.assertTrue(self.mikla.gpg_exists('ls'))
+
+    def test_gpg_not_exist(self):
+        """
+        Does the `gpg_exists` method return `False` if an executable
+        does not exist?
+        """
+        self.assertFalse(self.mikla.gpg_exists('the-amber-room'))

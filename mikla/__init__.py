@@ -6,6 +6,7 @@ __author__ = 'Matt Deacalion Stevens'
 __version__ = '0.0.1'
 
 import getpass
+import shutil
 import uuid
 from pathlib import Path
 
@@ -13,6 +14,12 @@ from pathlib import Path
 class Mikla:
     def __init__(self):
         pass
+
+    def gpg_exists(self, gpg_executable='gpg'):
+        """
+        Returns `True` if GnuPG is installed, `False` if not.
+        """
+        return bool(shutil.which(gpg_executable))
 
     def get_password(self):
         """
