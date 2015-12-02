@@ -22,6 +22,43 @@ class Mikla:
         if self.editor == '$EDITOR':
             self.editor = os.environ['EDITOR']
 
+    def encrypt(self, password, plain, encrypted=None):
+        """
+        Takes a password string, a plaintext file path and an
+        encrypted file path. Then encrypts the plaintext file to the
+        encrypted path.
+        """
+        if encrypted is None:
+            encrypted = self.encrypted
+
+        backup = '{}.bak'.format(encrypted)
+        shutil.move(encrypted, backup)
+
+        completed_process = subprocess.run(
+            [
+                'gpg',
+                '--symmetric',
+                '--armor',
+                '--batch',
+                '--passphrase',
+                password,
+                '--output',
+                encrypted,
+                plain,
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+
+        if completed_process.returncode == 0:
+            os.unlink(backup)
+        else:
+            shutil.move(backup, encrypted)
+
+            raise RuntimeError(
+                'Encryption of "{}" failed'.format(plain),
+            )
+
     def decrypt(self, password, encrypted=None, tmpfs=None):
         """
         Takes a password string, an encrypted file path and a
