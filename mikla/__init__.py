@@ -3,9 +3,10 @@ A command line tool to edit text files encrypted with GnuPG whilst
 preventing the plaintext from being written to the hard drive.
 """
 __author__ = 'Matt Deacalion Stevens'
-__version__ = '0.0.1'
+__version__ = '0.1.0'
 
 import getpass
+import hashlib
 import os
 import shutil
 import subprocess
@@ -21,6 +22,43 @@ class Mikla:
 
         if self.editor == '$EDITOR':
             self.editor = os.environ['EDITOR']
+
+    def run(self):
+        """
+        Call to run Mikla.
+        """
+        password = self.get_password()
+        plaintext = self.decrypt(password)
+
+        if self.launch_editor(plaintext):
+            self.encrypt(password, plaintext)
+
+        os.unlink(plaintext)
+
+    def launch_editor(self, plain, editor=None):
+        """
+        Takes a plaintext path and launches the text editor. Returns
+        `True` if the plaintext file was changed while the text
+        editor was running.
+        """
+        if editor is None:
+            editor = self.editor
+
+        before_checksum = self.checksum(plain)
+
+        subprocess.run([editor, plain])
+
+        return before_checksum != self.checksum(plain)
+
+    def checksum(self, text_file):
+        """
+        Takes a path to a text file and returns a string containing
+        the SHA1 checksum digest for it.
+        """
+        hasher = hashlib.sha1()
+        hasher.update(open(text_file).read().encode())
+
+        return hasher.hexdigest()
 
     def encrypt(self, password, plain, encrypted=None):
         """

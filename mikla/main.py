@@ -19,8 +19,7 @@ from mikla import Mikla, __version__
 
 def main():
     try:
-        mikla = Mikla(**docopt(__doc__, version=__version__))
-        mikla.decrypt(mikla.get_password())
+        Mikla(**docopt(__doc__, version=__version__)).run()
     except (FileNotFoundError, RuntimeError) as error:
         print(error, file=sys.stderr)
         sys.exit(1)
