@@ -6,6 +6,8 @@ __author__ = 'Matt Deacalion Stevens'
 __version__ = '0.0.1'
 
 import getpass
+import uuid
+from pathlib import Path
 
 
 class Mikla:
@@ -23,3 +25,13 @@ class Mikla:
                 return password
 
             print("Passwords don't match.")
+
+    def get_available_file_path(self, directory):
+        """
+        Takes a directory string and returns an available file path.
+        """
+        while True:
+            filepath = Path(directory) / str(uuid.uuid4())
+
+            if not filepath.exists():
+                return str(filepath)
