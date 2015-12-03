@@ -15,22 +15,22 @@ from pathlib import Path
 
 class Mikla:
     def __init__(self, **kwargs):
-        self.encrypted_file = kwargs.get('<encrypted-file>')
+        self.encrypted = kwargs.get('<encrypted-file>')
         self.tmpfs = kwargs.get('--tmpfs')
         self.editor = kwargs.get('--editor')
 
         if self.editor == '$EDITOR':
             self.editor = os.environ['EDITOR']
 
-    def decrypt(self, password, encrypted_file=None, tmpfs=None):
+    def decrypt(self, password, encrypted=None, tmpfs=None):
         """
         Takes a password string, an encrypted file path and a
         temporary filesystem path. Then decrypts the encrypted file
         using GnuPG. Returns the path to a file containing the
         plaintext.
         """
-        if encrypted_file is None:
-            encrypted_file = self.encrypted_file
+        if encrypted is None:
+            encrypted = self.encrypted
 
         if tmpfs is None:
             tmpfs = self.tmpfs
@@ -40,14 +40,14 @@ class Mikla:
         if not self.gpg_exists():
             raise FileNotFoundError('GnuPG not installed')
 
-        if not os.access(encrypted_file, os.F_OK):
+        if not os.access(encrypted, os.F_OK):
             raise FileNotFoundError(
-                'File not found: {}'.format(encrypted_file),
+                'File not found: {}'.format(encrypted),
             )
 
-        if not os.access(encrypted_file, os.R_OK):
+        if not os.access(encrypted, os.R_OK):
             raise FileNotFoundError(
-                'File not readable: {}'.format(encrypted_file),
+                'File not readable: {}'.format(encrypted),
             )
 
         if not os.access(tmpfs, os.W_OK):
@@ -55,7 +55,7 @@ class Mikla:
                 'tmpfs directory not writable: {}'.format(tmpfs),
             )
 
-        plaintext_path = self.get_available_file_path(tmpfs)
+        plain = self.get_available_file_path(tmpfs)
 
         completed_process = subprocess.run(
             [
@@ -65,8 +65,8 @@ class Mikla:
                 '--passphrase',
                 password,
                 '--output',
-                plaintext_path,
-                encrypted_file,
+                plain,
+                encrypted,
             ],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
@@ -74,10 +74,11 @@ class Mikla:
 
         if completed_process.returncode != 0:
             raise RuntimeError(
-                'Decryption of "{}" failed'.format(encrypted_file),
+                'Decryption of "{}" failed, '
+                'was the password correct?'.format(encrypted),
             )
 
-        return plaintext_path
+        return plain
 
     def gpg_exists(self, gpg_executable='gpg'):
         """
