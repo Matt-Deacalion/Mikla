@@ -6,14 +6,20 @@ __author__ = 'Matt Deacalion Stevens'
 __version__ = '0.0.1'
 
 import getpass
+import os
 import shutil
 import uuid
 from pathlib import Path
 
 
 class Mikla:
-    def __init__(self):
-        pass
+    def __init__(self, **kwargs):
+        self.ciphertext = kwargs.get('<encrypted-file>')
+        self.tmpfs = kwargs.get('--tmpfs')
+        self.editor = kwargs.get('--editor')
+
+        if self.editor == '$EDITOR':
+            self.editor = os.environ['EDITOR']
 
     def gpg_exists(self, gpg_executable='gpg'):
         """

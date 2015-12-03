@@ -12,11 +12,11 @@ Options:
 """
 from docopt import docopt
 
-from mikla import __version__
+from mikla import Mikla, __version__
 
 
 def main():
-    docopt(__doc__, version=__version__)
+    Mikla(**docopt(__doc__, version=__version__))
 
 if __name__ == '__main__':
     main()
