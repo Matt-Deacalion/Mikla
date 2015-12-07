@@ -3,7 +3,7 @@ A command line tool to edit text files encrypted with GnuPG whilst
 preventing the plaintext from being written to the hard drive.
 """
 __author__ = 'Matt Deacalion Stevens'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 
 import getpass
 import hashlib
@@ -55,7 +55,7 @@ class Mikla:
     def checksum(self, text_file):
         """
         Takes a path to a text file and returns a string containing
-        the SHA1 checksum digest for it.
+        the SHA1 checksum digest for it's content.
         """
         hasher = hashlib.sha1()
         hasher.update(open(text_file).read().encode())
