@@ -1,6 +1,15 @@
+from __future__ import print_function
+
+import sys
+
 from setuptools import setup
 
+if sys.version_info[:2] < (3, 5):
+    print('Mikla only runs on Python 3.5 or later', file=sys.stderr)
+    sys.exit(1)
+
 import mikla
+
 
 setup(
     name='mikla',
