@@ -4,9 +4,7 @@ Mikla
 
 A command line tool to edit text files encrypted with GnuPG while keeping the decrypted plaintext
 solely in RAM and off the hard drive. Preventing the plaintext from being recovered. This is
-achieved using the POSIX shared memory API. If you have no available memory, Mikla will not work.
-
-Currently, only works in **Python 3.5**.
+achieved using the POSIX shared memory API.
 
 Installation
 ------------
@@ -34,7 +32,7 @@ Use the `mikla` command to run Mikla::
 
 License
 -------
-Copyright © 2015 `Matt Deacalion Stevens`_, released under The `MIT License`_.
+Copyright © 2017 `Matt Deacalion Stevens`_, released under The `MIT License`_.
 
 .. _Matt Deacalion Stevens: http://dirtymonkey.co.uk
 .. _MIT License: http://deacalion.mit-license.org
